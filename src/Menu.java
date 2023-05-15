@@ -4,7 +4,7 @@ import Characters.Human;
 import java.util.ArrayList;
 
 public class Menu {
-    private Shelter shelter;
+    private final Shelter shelter;
 
     public Menu(Shelter shelter) {
         this.shelter = shelter;

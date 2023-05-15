@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import Shelter.*;
-import Characters.Human;
 
 public class Shelter {
     int yearsLived;
@@ -13,8 +12,9 @@ public class Shelter {
     public Shelter() {
         this.rooms.add(new Storage());
         this.ressources = new Ressources();
-        this.ressources.adjustWood(1000);
-        this.ressources.adjustStone(1000);
+        this.ressources.adjustWood(1500);
+        this.ressources.adjustStone(750);
+        this.ressources.adjustFood(1000);
     }
 
     public boolean verifyWood(int nb) {
@@ -24,6 +24,7 @@ public class Shelter {
     public boolean verifyStone(int nb) {
         return this.ressources.getStone() + nb > 0;
     }
+
     // TODO: Event lors d'un passTime
     public void passTime() {
         boolean isEvent = false;
@@ -90,5 +91,6 @@ public class Shelter {
         Shelter shelter = new Shelter();
         Menu menu = new Menu(shelter);
         menu.mainMenu();
+        shelter.scanner.close();
     }
 }
