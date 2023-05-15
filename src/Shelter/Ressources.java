@@ -9,9 +9,9 @@ public class Ressources {
     protected int maxStone;
     protected int maxFood;
     public Ressources() {
-        this.maxWood = 10000;
-        this.maxStone = 10000;
-        this.maxFood = 10000;
+        this.maxWood = 1500;
+        this.maxStone = 750;
+        this.maxFood = 1000;
     }
 
     public int getWood() {

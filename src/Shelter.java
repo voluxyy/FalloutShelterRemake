@@ -11,78 +11,84 @@ public class Shelter {
     Scanner scanner = new Scanner(System.in);
 
     public Shelter() {
-        // TODO: finalize the beginning of the game
-        this.ressources = new Ressources();
-
-        this.rooms.add(new Dormitory());
-        this.rooms.add(new Cafeteria());
-        this.rooms.add(new Field());
-        this.rooms.add(new StoneFactory());
-        this.rooms.add(new WoodFactory());
         this.rooms.add(new Storage());
-
-        this.rooms.get(0).addHuman(new Human("Christophe", 29, true));
-        this.rooms.get(1).addHuman(new Human("Mari", 23, false));
+        this.ressources = new Ressources();
+        this.ressources.adjustWood(1000);
+        this.ressources.adjustStone(1000);
     }
 
+    public boolean verifyWood(int nb) {
+        return this.ressources.getWood() + nb > 0;
+    }
 
+    public boolean verifyStone(int nb) {
+        return this.ressources.getStone() + nb > 0;
+    }
+    // TODO: Event lors d'un passTime
     public void passTime() {
-        this.yearsLived++;
-        for (Room room : this.rooms) {
-            for (int i = 0; i < room.getHumans().size(); i++) {
-                room.getHumans().get(i).updateAge();
+        boolean isEvent = false;
+        while (!isEvent) {
+            this.yearsLived++;
+            for (Room room : this.rooms) {
+                for (int i = 0; i < room.getHumans().size(); i++) {
+                    room.getHumans().get(i).updateAge();
 
-                if (room instanceof Dormitory) {
-                    room.getHumans().get(i).updateFatigue(0);
-                } else {
-                    room.getHumans().get(i).updateFatigue(100);
+                    if (room instanceof Dormitory) {
+                        room.getHumans().get(i).updateFatigue(0);
+                    } else {
+                        room.getHumans().get(i).updateFatigue(100);
+                    }
+
+                    if (room instanceof Cafeteria) {
+                        room.getHumans().get(i).updateHungry(0);
+                    } else {
+                        room.getHumans().get(i).updateHungry(100);
+                    }
+
+                    if (room.getHumans().get(i).getAge() > 30) {
+                        room.getHumans().get(i).kill(0);
+                        room.getHumans().remove(room.getHumans().get(i));
+                        i--;
+                        isEvent = true;
+                        continue;
+                    }
+                    if (room.getHumans().get(i).getHungry() < 0) {
+                        room.getHumans().get(i).kill(1);
+                        room.getHumans().remove(room.getHumans().get(i));
+                        i--;
+                        isEvent = true;
+                        continue;
+                    }
+                    if (room.getHumans().get(i).getFatigue() < 0) {
+                        room.getHumans().get(i).kill(2);
+                        room.getHumans().remove(room.getHumans().get(i));
+                        i--;
+                        isEvent = true;
+                        continue;
+                    }
                 }
 
-                if (room instanceof Cafeteria) {
-                    room.getHumans().get(i).updateHungry(0);
-                } else {
-                    room.getHumans().get(i).updateHungry(100);
-                }
-
-                if (room.getHumans().get(i).getAge() > 30) {
-                    room.getHumans().get(i).kill(0);
-                    room.getHumans().remove(room.getHumans().get(i));
-                    i--;
+                if (room instanceof StoneFactory) {
+                    this.ressources.adjustStone(room.getHumans().size() * 100);
                     continue;
                 }
-                if (room.getHumans().get(i).getHungry() < 0) {
-                    room.getHumans().get(i).kill(1);
-                    room.getHumans().remove(room.getHumans().get(i));
-                    i--;
+                if (room instanceof WoodFactory) {
+                    this.ressources.adjustWood(room.getHumans().size() * 100);
                     continue;
                 }
-                if(room.getHumans().get(i).getFatigue() < 0) {
-                    room.getHumans().get(i).kill(2);
-                    room.getHumans().remove(room.getHumans().get(i));
-                    i--;
+                if (room instanceof Field) {
+                    this.ressources.adjustFood(room.getHumans().size() * 100);
                     continue;
                 }
             }
 
-            if (room instanceof StoneFactory) {
-                this.ressources.adjustStone(room.getHumans().size() * 100);
-                continue;
-            }
-            if (room instanceof WoodFactory) {
-                this.ressources.adjustWood(room.getHumans().size() * 100);
-                continue;
-            }
-            if (room instanceof Field) {
-                this.ressources.adjustFood(room.getHumans().size() * 100);
-                continue;
-            }
+            this.yearsLived++;
         }
-
-        this.yearsLived++;
     }
 
     public static void main(String[] args) {
         Shelter shelter = new Shelter();
         Menu menu = new Menu(shelter);
+        menu.mainMenu();
     }
 }

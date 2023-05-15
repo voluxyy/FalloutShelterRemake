@@ -1,6 +1,10 @@
 package Characters;
 
+import java.util.Scanner;
+import java.util.Random;
+
 public class Human {
+    private Scanner scanner;
     protected String name;
     protected int age;
     boolean isMale;
@@ -51,5 +55,10 @@ public class Human {
         if (code == 2) {
             System.out.println("he was fatigue.");
         }
+    }
+
+    public Human makeAChild(String name) {
+        Random random = new Random();
+        return new Human(name, 0, random.nextBoolean());
     }
 }
